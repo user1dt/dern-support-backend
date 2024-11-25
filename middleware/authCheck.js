@@ -2,8 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const authCheck = (req, res, next) => {
   const accessToken = req.headers.authorization;
-
-  
+  console.log(accessToken)
   if (!accessToken) {
     return res.status(401).json({
       message: "Access denied. You are not authorized.",
@@ -16,7 +15,7 @@ const authCheck = (req, res, next) => {
        });
      }
 
-    const verifyToken = jwt.verify(token, process.env.SECERET_KEY);
+    const verifyToken = jwt.verify(token, "value");
 
 
     if (!verifyToken) {

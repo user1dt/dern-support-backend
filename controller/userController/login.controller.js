@@ -39,7 +39,8 @@ const login = async (req, res) => {
         id: checkEmail.id,
         email: checkEmail.email,
       },
-'value',      {
+process.env.SECRET_KEY,
+      {
         expiresIn: "1h",
       }
     );
