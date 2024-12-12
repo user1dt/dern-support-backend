@@ -4,20 +4,24 @@ const prisma = require("../../config/prisma");
 const repairCreate = async (req, res) => {
   try {
 
-    const { product_name, price } = req.body;  // get data from cilent with field
+    const { device, serial, issue, description   } = req.body;  // get data from cilent with field
     
     const userid = req.user.id;
 
     if (!userid) {
+
       return res.status(404).json({
-        nessage: "User Id not found",
+        message: "User Id not found",
       });
     }
 
     const saveData = await prisma.repair.create({
       data: {
-        product_name: product_name,
-        price: parseInt(price),
+        device_model:device,
+        serial_number: serial,
+        issue_type: issue,
+        description,
+        // imageUrl: image,
         userId: parseInt(userid),
       },
     });
@@ -27,6 +31,7 @@ const repairCreate = async (req, res) => {
       data: saveData,
     });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
         message: "Error while saving data",
         error: error,
@@ -57,9 +62,7 @@ const repairRead = async (req, res) => {
 const updateRepair = async (req, res) => {
     try {
         const {id} = req.params
-        const { product_name, price } = req.body;
-
-        //get userid from middleware called authcheck
+        const { device_model, serial_number, issue_type, description, imageUrl} = req.body; //get userid from middleware called authcheck
         const userId = req.user.id;
 
         const updateRepair  = await prisma.repair.update({
@@ -67,8 +70,11 @@ const updateRepair = async (req, res) => {
                 id:parseInt(id)
             },
             data:{
-                product_name: product_name,
-                price: parseInt(price),
+              device_model,
+              serial_number,
+              issue_type,
+              description,
+              imageUrl,
                 userId:userId
 
             }

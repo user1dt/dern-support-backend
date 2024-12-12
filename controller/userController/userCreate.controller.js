@@ -22,6 +22,7 @@ const createUser = async (req, res) => {
     const salt =  await bcrypt.genSalt(10);
     const hasPassword = await bcrypt.hash(password, salt)
     //to check password 
+    const userRole = "USER";
 
     const saveUserData = await prisma.user.create({
           data:{
@@ -29,9 +30,18 @@ const createUser = async (req, res) => {
             email:email,
             phone:parseInt(phone),
             password:hasPassword,
+            role: userRole,
           }
     })
-    
+    // const saveUserData = await prisma.user.create({
+    //   data: {
+    //     name: "Test User",
+    //     email: "testuser@example.com",
+    //     phone: "1234567890", // Ensure phone is a string if that's how it's defined
+    //     password: "yourpassword",
+    //     role: "USER", // Enum value should match exactly (case-sensitive)
+    //   },
+    // });
 
     const accessToken = jwt.sign(
       
@@ -40,8 +50,7 @@ const createUser = async (req, res) => {
        email:saveUserData.email,
     },
 
-
-     'value',
+     process.env.SECRET_KEY,
      {
        expiresIn: "1d",
      }
@@ -49,7 +58,12 @@ const createUser = async (req, res) => {
 
    return res.status(201).json({
       message: "User created successfully",
-      data: saveUserData,
+      data: {
+         id: saveUserData.id, 
+         name: saveUserData.name, 
+         email: saveUserData.email, 
+         role: saveUserData.role 
+      },
       accessToken:accessToken,
     })
 

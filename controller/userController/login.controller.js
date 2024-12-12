@@ -38,14 +38,20 @@ const login = async (req, res) => {
       {
         id: checkEmail.id,
         email: checkEmail.email,
+        role: checkEmail.role,
       },
-process.env.SECRET_KEY,
+      process.env.SECRET_KEY,
       {
         expiresIn: "1h",
       }
     );
     return res.status(200).json({
       message: "Login successful",
+      data: {
+        id: checkEmail.id,
+        email: checkEmail.email,
+        role: checkEmail.role,
+      },
       accessToken: accessToken,
     });
 

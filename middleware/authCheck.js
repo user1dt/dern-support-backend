@@ -15,7 +15,7 @@ const authCheck = (req, res, next) => {
        });
      }
 
-    const verifyToken = jwt.verify(token, "value");
+    const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
 
 
     if (!verifyToken) {
